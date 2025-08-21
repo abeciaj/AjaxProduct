@@ -1,0 +1,23 @@
+        # Build artifacts
+        [Bb]in/
+        [Oo]bj/
+
+        # Visual Studio
+        .vs/
+        *.suo
+        *.user
+        *.userosscache
+        *.sln.docstates
+
+        # ReSharper and other extensions
+        _ReSharper*/
+        *.[Rr]e[Ss]harper
+        *.DotSettings.user
+
+        # Package files
+        *.nupkg
+        *.snk
+
+        # Other temporary files
+        *.log
+        *.tmp
