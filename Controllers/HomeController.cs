@@ -17,54 +17,52 @@ public class HomeController : Controller
         _context = context;
         _logger = logger;
     }
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
+    {
+        return View();
+    }
+    // READ
+    [HttpGet]
+    public async Task<IActionResult> GetProducts()
     {
         var products = await _context.tblProduct.ToListAsync();
-        return View(products);
+        return Json(products);
     }
     
-    [HttpGet]
-    public async Task<IActionResult> GetDetailsById(int id)
-    {
-        var product = await _context.tblProduct.FindAsync(id);
-        if (product == null)
-            return new JsonResult(new { responseCode = 1, responseMessage = "Not found" });
-
-        return new JsonResult(new { responseCode = 0, responseMessage = JsonConvert.SerializeObject(product) });
-    }
-
+    // CREATE
     [HttpPost]
-    public async Task<IActionResult> InsertProduct([FromForm] ProductModel product)
+    public async Task<IActionResult> AddProduct([FromBody] ProductModel product)
     {
+        if (product == null) return BadRequest();
+
         _context.tblProduct.Add(product);
         await _context.SaveChangesAsync();
-        return new JsonResult(new { responseCode = 0, responseMessage = JsonConvert.SerializeObject(product) });
+        return Json(product);
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateProduct(int id, string name, float price)
+    // UPDATE
+    [HttpPost]
+    public async Task<IActionResult> UpdateProduct([FromBody] ProductModel product)
     {
-        var product = await _context.tblProduct.FindAsync(id);
-        if (product == null)
-            return new JsonResult(new { responseCode = 1, responseMessage = "Not found" });
+        var existing = await _context.tblProduct.FindAsync(product.Id);
+        if (existing == null) return NotFound();
 
-        product.Name = name;
-        product.Price = price;
+        existing.Name = product.Name;
+        existing.Price = product.Price;
+
         await _context.SaveChangesAsync();
-
-        return new JsonResult(new { responseCode = 0, responseMessage = JsonConvert.SerializeObject(product) });
+        return Json(existing);
     }
 
-    [HttpDelete]
-    public async Task<IActionResult> DeleteProduct(int id)
+    // DELETE
+    [HttpPost]
+    public async Task<IActionResult> DeleteProduct([FromBody] int id)
     {
         var product = await _context.tblProduct.FindAsync(id);
-        if (product == null)
-            return new JsonResult(new { responseCode = 1, responseMessage = "Not found" });
+        if (product == null) return NotFound();
 
         _context.tblProduct.Remove(product);
         await _context.SaveChangesAsync();
-
-        return new JsonResult(new { responseCode = 0, responseMessage = "Deleted" });
+        return Json(new { success = true });
     }
 }

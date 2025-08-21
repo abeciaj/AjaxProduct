@@ -14,6 +14,12 @@ A simple ASP.NET Core MVC web application to manage products (Create, Read, Upda
 
 ---
 
+## Nuget Packages
+- Microsoft.EntityFrameworkCore
+- Microsoft.EntityFrameworkCore.Tools
+- Microsoft.EntityFrameworkCore.SqlServer
+- Newtonsoft.Json
+
 ## Debugging
 
 ###Insert null error
